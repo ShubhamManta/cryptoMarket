@@ -1,11 +1,12 @@
-
 import type { AppDispatch } from "../store";
 
 import {
   updatePrices,
   setConnectionStatus,
   setError,
+  INITIAL_SYMBOLS,
 } from "../slices/cryptoSlice";
+import type { CryptoPrice } from "../slices/cryptoSlice";
 
 interface BinanceTicker {
   s: string;
@@ -19,15 +20,11 @@ interface BinanceMessage {
   data: BinanceTicker;
 }
 
-const SOCKET_URL =
-  "wss://stream.binance.com:9443/stream?streams=" +
-  [
-    "btcusdt@ticker",
-    "ethusdt@ticker",
-    "solusdt@ticker",
-    "bnbusdt@ticker",
-    "xrpusdt@ticker",
-  ].join("/");
+const SOCKET_BASE = "wss://stream.binance.com:9443/stream?streams=";
+
+// "BTCUSDT" -> "btcusdt@ticker"  (Binance allows up to 1024 streams per connection)
+const buildSocketUrl = (symbols: string[]): string =>
+  SOCKET_BASE + symbols.map((s) => `${s.toLowerCase()}@ticker`).join("/");
 
 export class CryptoWebSocket {
   private socket: WebSocket | null = null;
@@ -36,10 +33,17 @@ export class CryptoWebSocket {
   private isActive = false;
   private readonly maxReconnectDelay = 30000;
 
-  private dispatch: AppDispatch;
+  // ticks are buffered and sent to Redux in one batch instead of ~100 dispatches/sec
+  private buffer = new Map<string, CryptoPrice>();
+  private flushTimer: ReturnType<typeof setTimeout> | null = null;
+  private readonly flushInterval = 250;
 
-  constructor(dispatch: AppDispatch) {
+  private dispatch: AppDispatch;
+  private readonly url: string;
+
+  constructor(dispatch: AppDispatch, symbols: string[] = INITIAL_SYMBOLS) {
     this.dispatch = dispatch;
+    this.url = buildSocketUrl(symbols);
   }
 
   start(): void {
@@ -47,6 +51,16 @@ export class CryptoWebSocket {
 
     this.isActive = true;
     this.connect();
+  }
+
+  private flush(): void {
+    this.flushTimer = null;
+
+    if (this.buffer.size === 0) return;
+
+    const batch = Array.from(this.buffer.values());
+    this.buffer.clear();
+    this.dispatch(updatePrices(batch));
   }
 
   private connect(): void {
@@ -64,7 +78,7 @@ export class CryptoWebSocket {
     this.dispatch(setError(null));
 
     try {
-      const socket = new WebSocket(SOCKET_URL);
+      const socket = new WebSocket(this.url);
       this.socket = socket;
 
       socket.onopen = () => {
@@ -91,17 +105,18 @@ export class CryptoWebSocket {
 
           const ticker = message.data;
 
-          this.dispatch(
-            updatePrices([
-              {
-                symbol: ticker.s.replace("USDT", ""),
-                price: ticker.c,
-                change24h: ticker.P,
-                volume24h: ticker.q,
-                lastUpdated: Date.now(),
-              },
-            ])
-          );
+          // keep the full symbol ("BTCUSDT") so it matches the keys in the slice
+          this.buffer.set(ticker.s, {
+            symbol: ticker.s,
+            price: ticker.c,
+            change24h: ticker.P,
+            volume24h: ticker.q,
+            lastUpdated: Date.now(),
+          });
+
+          if (!this.flushTimer) {
+            this.flushTimer = setTimeout(() => this.flush(), this.flushInterval);
+          }
         } catch (error) {
           console.error("WebSocket parsing error:", error);
         }
@@ -112,11 +127,7 @@ export class CryptoWebSocket {
       };
 
       socket.onclose = (event) => {
-        console.log(
-          "Crypto WebSocket closed:",
-          event.code,
-          event.reason
-        );
+        console.log("Crypto WebSocket closed:", event.code, event.reason);
 
         if (this.socket === socket) {
           this.socket = null;
@@ -136,6 +147,7 @@ export class CryptoWebSocket {
       this.scheduleReconnect();
     }
   }
+
 
   private scheduleReconnect(): void {
     if (!this.isActive || this.reconnectTimer) return;
@@ -162,6 +174,12 @@ export class CryptoWebSocket {
       clearTimeout(this.reconnectTimer);
       this.reconnectTimer = null;
     }
+
+    if (this.flushTimer) {
+      clearTimeout(this.flushTimer);
+      this.flushTimer = null;
+    }
+    this.buffer.clear();
 
     const socket = this.socket;
     this.socket = null;

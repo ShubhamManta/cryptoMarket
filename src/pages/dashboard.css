@@ -1,0 +1,76 @@
+/* Component layout styles. Global reset + fonts live in style.css */
+body{font-size:13px;line-height:1.4}
+:root{--bg:#0c1014;--panel:#17181b;--panel2:#202226;--line:#2a2c31;--text:#f1f5f9;--muted:#8d9097;--green:#2ea35a;--red:#d8454f;--grey:#6b6a5a;--accent:#3ddc84}
+button,input,select{font:inherit;color:inherit}
+.app{height:100vh;display:flex;flex-direction:column}
+.header{height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;border-bottom:2px solid #000}
+.brand{font-weight:800;font-size:26px;letter-spacing:1px}.header-right{display:flex;align-items:center;gap:24px}
+.btn-ghost{background:var(--panel2);padding:8px 24px;border-radius:6px;cursor:pointer}.live{display:block;color:var(--accent)}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--panel2);display:grid;place-items:center}
+.body{flex:1;display:flex;min-height:0}.sidebar{width:46px;display:flex;flex-direction:column;gap:14px;padding:38px 0;align-items:center}
+.side-btn{color:var(--muted);padding:6px;border-radius:6px}.side-btn.active{background:var(--panel2);color:var(--text)}
+.grid{flex:1;display:grid;grid-template-columns:420px 1fr 324px;grid-template-rows:1fr 220px;gap:8px;padding:8px;min-width:0}
+.panel{background:var(--panel);border-radius:8px;padding:14px;min-width:0;overflow:auto}
+.watchlist{grid-row:1}.chart{grid-column:2;padding:0;display:flex;flex-direction:column}.right-col{grid-column:3;grid-row:1 / span 2;display:flex;flex-direction:column;gap:8px;overflow:auto}.positions{grid-column:1 / span 2}
+.select{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:10px 14px}
+.tabs{display:flex;gap:16px;margin:14px 0}.tab{color:var(--text);padding:4px 8px;border-radius:4px}.tab.on{background:var(--panel2)}
+.tabs.wide{justify-content:space-around;border-bottom:1px solid var(--line);margin:18px 0}.tabs.wide .tab{background:none;border-bottom:2px solid transparent;border-radius:0;padding:8px 18px}.tabs.wide .tab.on{color:var(--accent);border-color:var(--accent)}
+table{width:100%;border-collapse:collapse}th{color:var(--muted);font-weight:400;text-align:center;padding:8px 4px}td{text-align:center;padding:6px 4px}
+.watchlist table{width:100%;border-collapse:collapse}
+.watchlist tr{cursor:pointer;transition:background .15s}
+.watchlist tr:hover{background:rgba(255,255,255,0.035)}
+.watchlist tr.sel{background:rgba(46,163,90,0.12)}
+.quote{display:inline-block;min-width:86px;padding:7px 8px;border-radius:4px;font-size:14px}
+.quote.red{background:var(--red)}.quote.green{background:var(--green)}.quote.grey{background:var(--grey)}
+.chart-toolbar{display:flex;gap:6px;padding:8px;border-bottom:1px solid var(--line)}.chart-toolbar button{background:var(--panel2);padding:4px 10px;border-radius:4px}
+.chart-legend{padding:8px 14px;color:var(--muted)}.chart-legend .sym{color:var(--text);margin-right:12px}.red-t{color:var(--red);font-style:normal}
+.chart-svg{flex:1;width:100%;min-height:0}.grid line.grid,.chart-svg .grid{stroke:var(--line);stroke-dasharray:2 4}.price-line{stroke:var(--green);stroke-dasharray:3 3}
+.range{display:flex;justify-content:flex-end;gap:14px;padding:8px 16px;color:var(--muted)}
+
+/* Order Panel Header & Layout */
+.order{display:flex;flex-direction:column}
+.order-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.order-header h2{font-size:22px;font-weight:700;color:#fff;letter-spacing:-0.3px;margin:0}
+.order-info-icon{font-size:16px;color:var(--muted);cursor:pointer;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center}
+.order-sellbuy-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--panel2);padding:3px;border-radius:8px;margin-bottom:14px}
+.order-quote-btn{padding:10px 10px;border-radius:6px;font-size:13.5px;font-weight:600;background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s ease}
+.order-quote-btn .price-val{font-family:"JetBrains Mono",monospace;font-size:14px}
+.order-quote-btn.sell.active{background:#1c202a;color:#fff;border:1px solid rgba(239,68,68,0.4)}
+.order-quote-btn.buy.active{background:var(--green);color:#fff}
+.order-nav-tabs{display:flex;border-bottom:1px solid var(--line);margin-bottom:16px}
+.order-nav-tab{flex:1;text-align:center;padding:8px 0 10px;font-size:14px;font-weight:500;color:var(--muted);background:none;border-bottom:2px solid transparent;cursor:pointer;transition:color .15s}
+.order-nav-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.order-form-body{display:flex;flex-direction:column;gap:10px}
+.order-field-row{display:flex;justify-content:space-between;align-items:center}
+.field-label{font-size:13.5px;font-weight:500;color:#cbd5e1}
+.field-display-box{width:180px;height:38px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;font-size:14px;font-weight:500;color:#fff}
+.field-stepper-box{width:180px;height:38px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;display:flex;align-items:center;justify-content:space-between;padding:0 8px}
+.step-btn{width:24px;height:24px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:18px;border-radius:4px}
+.step-btn:hover{color:#fff;background:rgba(255,255,255,0.08)}
+.stepper-val{font-family:"JetBrains Mono",monospace;font-size:14px;font-weight:600;color:#fff}
+.stepper-input{width:90px;background:none;border:none;text-align:center;font-family:"JetBrains Mono",monospace;font-size:14px;font-weight:600;color:#fff;outline:none}
+.order-toggle-card{display:flex;justify-content:space-between;align-items:center;background:var(--panel2);padding:10px 14px;border-radius:6px;font-size:13.5px;color:#cbd5e1}
+.order-switch{width:34px;height:18px;border-radius:9px;background:#3b4252;position:relative;cursor:pointer;transition:.18s ease}
+.order-switch::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#94a3b8;transition:.18s ease}
+.order-switch.on{background:var(--green)}
+.order-switch.on::after{left:18px;background:#fff}
+.order-comment-wrap{margin:2px 0}
+.order-comment-toggle{background:none;color:var(--muted);font-size:13px;cursor:pointer;padding:4px 0;transition:color .15s}
+.order-comment-toggle:hover{color:#fff}
+.order-comment-input{width:100%;height:36px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:0 10px;color:#fff;font-size:13px;margin-top:6px;outline:none}
+.order-comment-input:focus{border-color:var(--accent)}
+.order-action-btn{width:100%;border-radius:8px;padding:12px 14px;cursor:pointer;transition:all .18s ease;margin-top:8px;box-shadow:0 4px 12px rgba(0,0,0,0.3)}
+.order-action-btn.buy{background:var(--green);color:#fff}
+.order-action-btn.buy:hover{background:#258c4c}
+.order-action-btn.sell{background:var(--red);color:#fff}
+.order-action-btn.sell:hover{background:#b93740}
+.order-action-btn.placed{background:#10b981!important}
+.order-action-btn .action-main{display:block;font-size:16px;font-weight:700;line-height:1.2}
+.order-action-btn .action-sub{display:block;font-size:12.5px;font-weight:500;opacity:.92;margin-top:2px;letter-spacing:.2px}
+
+.ai-head{display:flex;justify-content:space-between;font-size:11px;padding:4px 6px}.ai-head em{background:var(--green);font-style:normal;padding:0 4px;border-radius:3px;margin-right:4px}.ai-head a{color:var(--accent)}
+.ai-card{border:2px solid #5aa4ff;border-radius:14px;padding:14px;font-size:11px;background:linear-gradient(135deg,#1a1f27,#17181b)}.risk{color:var(--accent)}.ai-foot{display:flex;gap:16px;border-top:1px solid var(--line);padding-top:8px;color:var(--muted)}
+.pos-top{display:flex;justify-content:space-between;align-items:center}.pnl{display:flex;gap:12px;align-items:center}.green-t{color:var(--accent);font-size:16px}
+.count{background:var(--panel2);padding:0 6px;border-radius:4px;font-style:normal}.empty{text-align:center;color:var(--muted);padding:28px}
+@media(max-width:1100px){.grid{grid-template-columns:1fr;grid-template-rows:auto}.right-col,.chart,.positions{grid-column:1;grid-row:auto}.chart{height:420px}}
+.quote,.stepper b,.price-line,.chart-legend span,.pnl b{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
