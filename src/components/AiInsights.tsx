@@ -1,3 +1,5 @@
+import { useRouter } from "next/router";
+
 interface AiInsightsProps {
   risk?: "Low" | "Medium" | "High";
   text?: string;
@@ -7,10 +9,11 @@ export default function AiInsights({
   risk = "Low",
   text = "No open positions or margin usage. Zero account balance eliminates any active risk exposure.",
 }: AiInsightsProps) {
+  const router = useRouter();
+
   const handleViewAnalytics = (e: React.MouseEvent) => {
     e.preventDefault();
-    window.history.pushState({}, "", "/analytics");
-    window.dispatchEvent(new PopStateEvent("popstate"));
+    router.push("/analytics");
   };
 
   return (

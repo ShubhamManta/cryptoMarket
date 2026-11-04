@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 import {
   ArrowLeft,
   ChevronDown,
@@ -38,6 +39,7 @@ type TabType =
 type DepositMethodType = "Bank" | "Crypto" | "Mastercard/Visa";
 
 export default function Funds() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const accounts = useAppSelector(selectAccounts);
   const selectedAccountId = useAppSelector(selectSelectedAccountId);
@@ -132,8 +134,7 @@ export default function Funds() {
 
   /* ------------------- Navigation Helpers ------------------- */
   const handleBackToDashboard = () => {
-    window.history.pushState({}, "", "/dashboard");
-    window.dispatchEvent(new PopStateEvent("popstate"));
+    router.push("/dashboard");
   };
 
   /* ------------------- Action Handlers ------------------- */

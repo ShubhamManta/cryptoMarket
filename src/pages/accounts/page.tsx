@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 import {
   ArrowLeft,
   Plus,
@@ -29,6 +30,7 @@ import {
 } from "@/store/slices/fundsSlice";
 
 export default function ManageAccounts() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const accounts = useAppSelector(selectAccounts);
 
@@ -105,20 +107,17 @@ export default function ManageAccounts() {
 
   /* ------------------- Navigation Actions ------------------- */
   const handleBackToDashboard = () => {
-    window.history.pushState({}, "", "/dashboard");
-    window.dispatchEvent(new PopStateEvent("popstate"));
+    router.push("/dashboard");
   };
 
   const handleTradeClick = (acc: TradingAccount) => {
     dispatch(setSelectedAccount(acc.id));
-    window.history.pushState({}, "", "/dashboard");
-    window.dispatchEvent(new PopStateEvent("popstate"));
+    router.push("/dashboard");
   };
 
   const handleDepositClick = (acc: TradingAccount) => {
     dispatch(setSelectedAccount(acc.id));
-    window.history.pushState({}, "", "/funds");
-    window.dispatchEvent(new PopStateEvent("popstate"));
+    router.push("/funds");
   };
 
   const handleInternalTransferClick = (acc: TradingAccount) => {
@@ -127,8 +126,7 @@ export default function ManageAccounts() {
     if (typeof sessionStorage !== "undefined") {
       sessionStorage.setItem("fundsActiveTab", "Internal Transfer");
     }
-    window.history.pushState({}, "", "/funds");
-    window.dispatchEvent(new PopStateEvent("popstate"));
+    router.push("/funds");
   };
 
   /* ------------------- Create Account Submit ------------------- */
@@ -243,9 +241,8 @@ export default function ManageAccounts() {
                 <div className="accounts-tabs-row">
                   <div className="accounts-tabs-left">
                     <button
-                      className={`accounts-tab-btn ${
-                        activeCategoryTab === "Live" ? "active" : ""
-                      }`}
+                      className={`accounts-tab-btn ${activeCategoryTab === "Live" ? "active" : ""
+                        }`}
                       onClick={() => setActiveCategoryTab("Live")}
                     >
                       <span>Live</span>
@@ -255,9 +252,8 @@ export default function ManageAccounts() {
                     </button>
 
                     <button
-                      className={`accounts-tab-btn ${
-                        activeCategoryTab === "Demo" ? "active" : ""
-                      }`}
+                      className={`accounts-tab-btn ${activeCategoryTab === "Demo" ? "active" : ""
+                        }`}
                       onClick={() => setActiveCategoryTab("Demo")}
                     >
                       <span>Demo</span>
@@ -551,9 +547,8 @@ export default function ManageAccounts() {
                     {/* Live / Demo Radio Toggle */}
                     <div className="category-toggle-pill">
                       <button
-                        className={`category-radio-btn ${
-                          newAccountCategory === "Live" ? "active" : ""
-                        }`}
+                        className={`category-radio-btn ${newAccountCategory === "Live" ? "active" : ""
+                          }`}
                         onClick={() => setNewAccountCategory("Live")}
                       >
                         <span className="radio-circle">
@@ -565,9 +560,8 @@ export default function ManageAccounts() {
                       </button>
 
                       <button
-                        className={`category-radio-btn ${
-                          newAccountCategory === "Demo" ? "active" : ""
-                        }`}
+                        className={`category-radio-btn ${newAccountCategory === "Demo" ? "active" : ""
+                          }`}
                         onClick={() => setNewAccountCategory("Demo")}
                       >
                         <span className="radio-circle">
@@ -583,9 +577,8 @@ export default function ManageAccounts() {
                     <div className="tiers-grid">
                       {/* Card 1: Raw ECN */}
                       <div
-                        className={`tier-card ${
-                          newAccountTier === "Raw ECN" ? "selected" : ""
-                        }`}
+                        className={`tier-card ${newAccountTier === "Raw ECN" ? "selected" : ""
+                          }`}
                         onClick={() => setNewAccountTier("Raw ECN")}
                       >
                         <div className="tier-name">Raw ECN</div>
@@ -607,9 +600,8 @@ export default function ManageAccounts() {
 
                       {/* Card 2: Premium ECN */}
                       <div
-                        className={`tier-card ${
-                          newAccountTier === "Premium ECN" ? "selected" : ""
-                        }`}
+                        className={`tier-card ${newAccountTier === "Premium ECN" ? "selected" : ""
+                          }`}
                         onClick={() => setNewAccountTier("Premium ECN")}
                       >
                         <div className="tier-name">Premium ECN</div>
@@ -674,9 +666,8 @@ export default function ManageAccounts() {
                         ].map((c) => (
                           <button
                             key={c.code}
-                            className={`currency-chip-btn ${
-                              newCurrency === c.code ? "selected" : ""
-                            }`}
+                            className={`currency-chip-btn ${newCurrency === c.code ? "selected" : ""
+                              }`}
                             onClick={() => setNewCurrency(c.code)}
                           >
                             <span>{c.flag}</span>
@@ -700,9 +691,8 @@ export default function ManageAccounts() {
                         ].map((lev) => (
                           <button
                             key={lev}
-                            className={`leverage-chip-btn ${
-                              newLeverage === lev ? "selected" : ""
-                            }`}
+                            className={`leverage-chip-btn ${newLeverage === lev ? "selected" : ""
+                              }`}
                             onClick={() => setNewLeverage(lev)}
                           >
                             {lev}
@@ -784,9 +774,8 @@ export default function ManageAccounts() {
               {["100x", "200x", "300x", "400x", "500x", "1000x"].map((lev) => (
                 <button
                   key={lev}
-                  className={`leverage-chip-btn ${
-                    selectedModalLeverage.toLowerCase() === lev ? "selected" : ""
-                  }`}
+                  className={`leverage-chip-btn ${selectedModalLeverage.toLowerCase() === lev ? "selected" : ""
+                    }`}
                   onClick={() => setSelectedModalLeverage(lev)}
                 >
                   {lev}

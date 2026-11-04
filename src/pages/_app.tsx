@@ -30,10 +30,9 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!authInitialized) return;
 
+    // Only redirect to login if attempting to access a protected route while unauthenticated
     if (!isAuthenticated && !isPublicRoute) {
       router.push("/");
-    } else if (isAuthenticated && isPublicRoute) {
-      router.push("/dashboard");
     }
   }, [authInitialized, isAuthenticated, isPublicRoute, router]);
 
@@ -44,11 +43,6 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
 
   // Block protected content if not authenticated
   if (!isAuthenticated && !isPublicRoute) {
-    return null;
-  }
-
-  // Block login screen if already authenticated (redirecting to dashboard)
-  if (isAuthenticated && isPublicRoute) {
     return null;
   }
 
